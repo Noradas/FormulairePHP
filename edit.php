@@ -1,3 +1,4 @@
+<?php require_once('connect.php');?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,11 +10,11 @@
 <body>
     <h1>Contact</h1>
 
-    <form action="process-form.php" method="post">
+    <form  method="POST">
         <label for="name">Name</label>
         <input type="text" id="name" name="name">
                                                                                     
-        <label for="message">Message</label>s
+        <label for="message">Message</label>
         <textarea id="message" name="message"></textarea>
 
         <label for="priority">priority</label>
@@ -39,17 +40,32 @@
           </label>
         </fieldset>
 
-        <label>
-         <input type="checkbox" name="terms">
-         I agree to the terms and conditions
-       </label>
-
+        
        <br>
 
-       <button>Send</button>
+       <button name="submit">Modifier</button>
+        <?php
+            if(isset($_POST['submit'])){
+                
+                $id=$_GET['id'];
+                $name = $_POST['name'];
+                $message = $_POST['message'];
+                $priority = filter_input(INPUT_POST, "priority" , FILTER_VALIDATE_INT);
+                $type = filter_input(INPUT_POST, "type" , FILTER_VALIDATE_INT);
+                
+                $req="UPDATE message SET name='$name',body='$message',priority=$priority, type=$type WHERE id=$id ";
+                $result=mysqli_query($conn,$req);
+                if($result){
+                    echo "Modification réussie";
+                    header('location:afficher.php');
+                } else {
+                    echo "Modification échouée";
+            
+                }
+            }
+        
+        ?>
     </form>
-    <form action="Afficher.php" method="POST">
-      <button name='submit' value='1'>display</button>
-  </form>
+   
 </body>
 </html>
